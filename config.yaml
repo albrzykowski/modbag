@@ -1,0 +1,36 @@
+model:
+  name: example_model
+
+mode: online
+
+online:
+  input:
+    type: kafka
+    kafka:
+      topic: "input-topic"
+      bootstrap_servers: "localhost:9092"
+      schema_path: "schemas/input_schema.avsc"
+  output:
+    type: kafka
+    kafka:
+      topic: "output-topic"
+      bootstrap_servers: "localhost:9092"
+    avro:
+      path: "data/predictions.avro"
+      schema_path: "schemas/output_schema.avsc"
+
+batch:
+  input:
+    type: avro
+    avro:
+      path: "data/transactions.avro"
+      schema_path: "schemas/input_schema.avsc"
+
+  output:
+    type: avro
+    kafka:
+      topic: "output-topic"
+      bootstrap_servers: "localhost:9092"
+    avro:
+      path: "data/predictions.avro"
+      schema_path: "schemas/output_schema.avsc"

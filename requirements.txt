@@ -1,0 +1,8 @@
+PyYaml
+joblib
+fastavro
+confluent-kafka
+schedule
+scikit-learn
+apscheduler
+jinja2

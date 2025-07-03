@@ -1,0 +1,5 @@
+from model_runner import {{ name | default(MyModelRunner) }}
+
+if __name__ == "__main__":
+    runner = {{ name | default(MyModelRunner) }}(config_path="config.yaml")
+    runner.run()

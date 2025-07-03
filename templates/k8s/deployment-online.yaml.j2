@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ metadata.name | default("my-model-online") }}
+spec:
+  replicas: {{ spec.replicas | default(1) }}
+  selector:
+    matchLabels:
+      app: {{ spec.selector.matchLabels.app | default("my-model") }}
+  template:
+    metadata:
+      labels:
+        app: {{ spec.template.metadata.labels.app | default("my-model") }}
+    spec:
+      containers:
+        - name: {{ spec.template.spec.containers[0].name | default("model") }}
+          image: {{ spec.template.spec.containers[0].image | default("your-docker-registry/my-model:latest") }}
+          volumeMounts:
+            - name: {{ spec.template.spec.containers[0].volumeMounts[0].name | default("config") }}
+              mountPath: {{ spec.template.spec.containers[0].volumeMounts[0].mountPath | default("/app/config.yaml") }}
+              subPath: {{ spec.template.spec.containers[0].volumeMounts[0].subPath | default("config.yaml") }}
+      volumes:
+        - name: {{ spec.volumes[0].name | default("config") }}
+          configMap:
+            name: {{ spec.volumes[0].configMap.name | default("model-config") }}

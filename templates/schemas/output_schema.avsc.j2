@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "name": "{{ record_name | default('DefaultRecord') }}",
+  "namespace": "{{ namespace | default('com.default') }}",
+  "fields": [
+    {% set default_fields = [
+      {"name": "field1", "type": "string"},
+      {"name": "field2", "type": "int"}
+    ] %}
+    {% set actual_fields = fields if fields is defined and fields else default_fields %}
+    {% for field in actual_fields %}
+    {
+      "name": "{{ field.name }}",
+      "type": "{{ field.type }}"
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}

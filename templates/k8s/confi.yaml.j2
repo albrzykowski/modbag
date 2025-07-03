@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: model-config
+data:
+  config.yaml: |
+    mode: {{ mode | default("batch") }}
+    batch:
+      schedule: {{ batch.schedule | default("null") }}
+      input:
+        type: {{ batch.input.type | default("avro") }}
+        path: {{ batch.input.path | default("data/input.avro") }}
+      output:
+        type: {{ batch.output.type | default("kafka") }}
+        kafka:
+          topic: {{ batch.output.kafka.topic | default("output") }}
+          bootstrap_servers: {{ batch.output.kafka.bootstrap_servers | default("localhost:9092") }}

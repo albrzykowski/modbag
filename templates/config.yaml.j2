@@ -1,0 +1,36 @@
+model:
+  name: {{ model_name | default("example_model") }}
+
+mode: {{ mode | default("online") }}
+
+online:
+  input:
+    type: kafka
+    kafka:
+      topic: "{{ online_input_kafka_topic | default("input-topic") }}"
+      bootstrap_servers: "{{ online_input_kafka_bootstrap | default("localhost:9092") }}"
+      schema_path: "{{ online_input_kafka_schema | default("schemas/input_schema.avsc") }}"
+  output:
+    type: kafka
+    kafka:
+      topic: "{{ online_output_kafka_topic | default("output-topic") }}"
+      bootstrap_servers: "{{ online_output_kafka_bootstrap | default("localhost:9092") }}"
+    avro:
+      path: "{{ online_output_avro_path | default("data/predictions.avro") }}"
+      schema_path: "{{ online_output_avro_schema | default("schemas/output_schema.avsc") }}"
+
+batch:
+  input:
+    type: avro
+    avro:
+      path: "{{ batch_input_avro_path | default("data/transactions.avro") }}"
+      schema_path: "{{ batch_input_avro_schema | default("schemas/input_schema.avsc") }}"
+
+  output:
+    type: avro
+    kafka:
+      topic: "{{ batch_output_kafka_topic | default("output-topic") }}"
+      bootstrap_servers: "{{ batch_output_kafka_bootstrap | default("localhost:9092") }}"
+    avro:
+      path: "{{ batch_output_avro_path | default("data/predictions.avro") }}"
+      schema_path: "{{ batch_output_avro_schema | default("schemas/output_schema.avsc") }}"

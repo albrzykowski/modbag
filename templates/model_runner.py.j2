@@ -1,0 +1,5 @@
+from modbag.model_runner import ModelRunner
+
+class {{ name | default(MyModelRunner) }}(ModelRunner):
+  def run(self):
+    pass

@@ -1,0 +1,22 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Install global dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy models directory
+COPY models/ ./models/
+
+# Install dependencies for each model if requirements.txt exists
+RUN for d in models/*; do \
+      if [ -f "$d/requirements.txt" ]; then \
+        pip install --no-cache-dir -r "$d/requirements.txt"; \
+      fi \
+    done
+
+# Copy remaining files (e.g. run.py, service.py)
+COPY . .
+
+CMD ["python", "run.py"]

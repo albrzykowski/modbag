@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ metadata.name | default("my-model-batch") }}
+spec:
+  schedule: "{{ spec.schedule | default('0 3 * * *') }}"  # run daily at 03:00
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: {{ spec.jobTemplate.spec.template.spec.containers[0].name | default("model") }}
+              image: {{ spec.jobTemplate.spec.template.spec.containers[0].image | default("your-docker-registry/my-model:latest") }}
+              volumeMounts:
+                - name: {{ spec.jobTemplate.spec.template.spec.containers[0].volumeMounts[0].name | default("config") }}
+                  mountPath: {{ spec.jobTemplate.spec.template.spec.containers[0].volumeMounts[0].mountPath | default("/app/config.yaml") }}
+                  subPath: {{ spec.jobTemplate.spec.template.spec.containers[0].volumeMounts[0].subPath | default("config.yaml") }}
+          restartPolicy: {{ spec.jobTemplate.spec.template.spec.restartPolicy | default("OnFailure") }}
+          volumes:
+            - name: {{ spec.jobTemplate.spec.template.spec.volumes[0].name | default("config") }}
+              configMap:
+                name: {{ spec.jobTemplate.spec.template.spec.volumes[0].configMap.name | default("model-config") }}
